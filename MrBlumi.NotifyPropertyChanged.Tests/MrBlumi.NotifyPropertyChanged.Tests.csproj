@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+		<PackageReference Include="Verify.SourceGenerators" />
+		<PackageReference Include="Verify.XunitV3" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\MrBlumi.NotifyPropertyChanged.Abstractions\MrBlumi.NotifyPropertyChanged.Abstractions.csproj" />
+	  <ProjectReference Include="..\MrBlumi.NotifyPropertyChanged\MrBlumi.NotifyPropertyChanged.csproj" />
+	</ItemGroup>
+</Project>
