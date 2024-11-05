@@ -18,11 +18,9 @@ public partial record Record
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private string _stringProperty;
-
     public partial string StringProperty
     {
-        get { return _stringProperty; }
-        set { SetProperty<string>(ref _stringProperty, value); }
+        get { return field; }
+        set { SetProperty(ref field, value); }
     }
 }

@@ -18,19 +18,15 @@ public partial class Class
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private string _stringProperty;
-
     public partial string StringProperty
     {
-        get { return _stringProperty; }
-        set { SetProperty<string>(ref _stringProperty, value); }
+        get { return field; }
+        set { SetProperty(ref field, value); }
     }
-
-        private int _intProperty;
 
     public partial int IntProperty
     {
-        get { return _intProperty; }
-        set { SetProperty<int>(ref _intProperty, value); }
+        get { return field; }
+        set { SetProperty(ref field, value); }
     }
 }

@@ -45,7 +45,7 @@ public class SourceCodeGenerator : IIncrementalGenerator
                         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
                     }
 
-                {{string.Join("\r\n\r\n    ", props.Select(x => PropertyCode(x.Symbol, x.Node)))}}
+                {{string.Join("\r\n\r\n", props.Select(x => PropertyCode(x.Symbol, x.Node)))}}
                 }
                 """;
 
@@ -53,21 +53,14 @@ public class SourceCodeGenerator : IIncrementalGenerator
         });
     }
 
-    private static string PropertyCode(IPropertySymbol symbol, PropertyDeclarationSyntax syntax)
-    {
-        var fieldName = new string(['_', char.ToLower(symbol.Name[0]), .. symbol.Name[1..]]);
-        var typeName = symbol.Type.ToDisplayString(FullyQualifiedFormat);
-
-        return $$"""
-            private {{typeName}} {{fieldName}};
-    
-            {{string.Join(" ", syntax.Modifiers)}} {{typeName}} {{symbol.Name}}
+    private static string PropertyCode(IPropertySymbol symbol, PropertyDeclarationSyntax syntax) =>
+        $$"""
+            {{string.Join(" ", syntax.Modifiers)}} {{symbol.Type.ToDisplayString(FullyQualifiedFormat)}} {{symbol.Name}}
             {
-                get { return {{fieldName}}; }
-                set { SetProperty<{{typeName}}>(ref {{fieldName}}, value); }
+                get { return field; }
+                set { SetProperty(ref field, value); }
             }
         """;
-    }
 
     private static bool NodeIsPropertyDeclarationSyntax(SyntaxNode node, CancellationToken token) =>
         node is PropertyDeclarationSyntax { AttributeLists.Count: > 0 };
