@@ -12,7 +12,7 @@ public abstract class TestBase
         var sourceGenerator = new SourceCodeGenerator();
 
         var compilation = CSharpCompilation.Create(
-            assemblyName: nameof(SourceCodeGeneratorTests),
+            assemblyName: "Test",
             syntaxTrees: source
                 .Select(x => CSharpSyntaxTree.ParseText(x, cancellationToken: TestContext.Current.CancellationToken))
                 .ToArray(),

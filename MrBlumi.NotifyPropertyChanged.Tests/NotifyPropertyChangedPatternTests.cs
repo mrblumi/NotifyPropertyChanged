@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace MrBlumi.NotifyPropertyChanged.Tests;
 
-public class SourceCodeGeneratorTests : TestBase
+public class NotifyPropertyChangedPatternTests : TestBase
 {
     [Fact]
     public Task ImplementNotifyPropertyChangedPattern() =>

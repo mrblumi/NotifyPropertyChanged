@@ -9,7 +9,7 @@ namespace Test;
 public partial record Record
 {
     public event PropertyChangedEventHandler? PropertyChanged;
-
+    
     private void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return;
@@ -17,10 +17,10 @@ public partial record Record
         field = value;
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
+    
     public partial string StringProperty
     {
-        get { return field; }
-        set { SetProperty(ref field, value); }
+        get => field;
+        set => SetProperty(ref field, value);
     }
 }

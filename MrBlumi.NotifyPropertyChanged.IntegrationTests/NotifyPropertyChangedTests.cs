@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace MrBlumi.NotifyPropertyChanged.IntegrationTests;
 
-public class NotifyPropertyChangedTests
+public partial class NotifyPropertyChangedTests
 {
     [Fact]
     public void WhenAnnotatedPropertiesAreChangedTheEventIsRaised()
@@ -24,10 +24,10 @@ public class NotifyPropertyChangedTests
         receivedSender.Should().Be(dummy);
         receivedEventArgs.Should().BeEquivalentTo(new { PropertyName = nameof(Dummy.StringProperty) });
     }
-}
 
-public partial class Dummy
-{
-    [NotifyOnChange]
-    public required partial string StringProperty { get; set; }
+    public partial class Dummy
+    {
+        [NotifyOnChange]
+        public required partial string StringProperty { get; set; }
+    }
 }
