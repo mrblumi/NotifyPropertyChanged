@@ -1,5 +1,5 @@
 using MrBlumi.NotifyPropertyChanged.Extensions;
-using Test.Generator.NotifyPropertyChanged.Models;
+using MrBlumi.NotifyPropertyChanged.Models;
 
 namespace MrBlumi.NotifyPropertyChanged.Helpers;
 

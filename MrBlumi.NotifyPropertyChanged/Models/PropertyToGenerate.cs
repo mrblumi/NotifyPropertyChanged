@@ -1,7 +1,6 @@
 using MrBlumi.NotifyPropertyChanged.Helpers;
-using MrBlumi.NotifyPropertyChanged.Models;
 
-namespace Test.Generator.NotifyPropertyChanged.Models;
+namespace MrBlumi.NotifyPropertyChanged.Models;
 
 public record PropertyToGenerate(
     ImmutableEquatableArray<string> Modifiers,

@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MrBlumi.NotifyPropertyChanged.Helpers;
-using Test.Generator.NotifyPropertyChanged.Models;
+using MrBlumi.NotifyPropertyChanged.Models;
 
 namespace MrBlumi.NotifyPropertyChanged.Extensions;
 
@@ -29,7 +29,7 @@ internal static class SyntaxExtensions
     public static TypeToGenerate GetTypeHierarchy(this TypeDeclarationSyntax syntax)
     {
         var typeToGenerate = new TypeToGenerate(
-            Modifiers: syntax.Modifiers.Select(x => x.Text).ToImmutableEquatableArray(),
+            Modifiers: syntax.Modifiers.GetModifiersArray(),
             Keyword: syntax.Keyword.Text,
             Name: syntax.Identifier.Text);
 
@@ -37,7 +37,7 @@ internal static class SyntaxExtensions
         {
             syntax = parentSyntax;
             typeToGenerate = new TypeToGenerate(
-                Modifiers: syntax.Modifiers.Select(x => x.Text).ToImmutableEquatableArray(),
+                Modifiers: syntax.Modifiers.GetModifiersArray(),
                 Keyword: syntax.Keyword.Text,
                 Name: syntax.Identifier.Text,
                 typeToGenerate);
@@ -45,4 +45,22 @@ internal static class SyntaxExtensions
 
         return typeToGenerate;
     }
+
+    public static PropertyToGenerate GetPropertyToGenerate(this PropertyDeclarationSyntax syntax, IPropertySymbol symbol)
+    {
+        var accessors = syntax.AccessorList?.Accessors
+            .Select(x => new AccessorToGenerate(x.Modifiers.GetModifiersArray(), x.Keyword.Text))
+            .ToDictionary(x => x.Keyword)
+            ?? new();
+
+        return new(
+            Modifiers: syntax.Modifiers.GetModifiersArray(),
+            Type: symbol.Type.ToFullyQualifiedDisplayString(),
+            Name: syntax.Identifier.Text,
+            Getter: accessors["get"],
+            Setter: accessors["set"]);
+    }
+
+    private static ImmutableEquatableArray<string> GetModifiersArray(this SyntaxTokenList syntax) =>
+        syntax.Select(x => x.Text).ToImmutableEquatableArray();
 }

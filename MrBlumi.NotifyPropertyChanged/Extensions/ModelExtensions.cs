@@ -1,4 +1,4 @@
-using Test.Generator.NotifyPropertyChanged.Models;
+using MrBlumi.NotifyPropertyChanged.Models;
 
 namespace MrBlumi.NotifyPropertyChanged.Extensions;
 
