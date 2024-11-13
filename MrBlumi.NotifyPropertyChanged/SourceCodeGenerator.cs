@@ -4,6 +4,8 @@ using MrBlumi.NotifyPropertyChanged.Abstractions;
 using System.Collections.Immutable;
 using MrBlumi.NotifyPropertyChanged.Helpers;
 using Test.Generator.NotifyPropertyChanged.Models;
+using MrBlumi.NotifyPropertyChanged.Models;
+using MrBlumi.NotifyPropertyChanged.Extensions;
 
 namespace Test.Generator.NotifyPropertyChanged;
 
@@ -25,12 +27,11 @@ public class SourceCodeGenerator : IIncrementalGenerator
         {
             var containingSyntax = (TypeDeclarationSyntax)props[0].Node.Parent!;
             var fullTypeToGenerate = new FullTypeToGenerate(
-                Namespace: GetNamespace(containingSyntax),
-                TypeHierarchie: GetTypeHierarchy(containingSyntax),
-                Properties: props.Select(x => new PropertyToGenerate(
-                    Modifiers: x.Node.Modifiers.Select(y => y.Text),
-                    Type: x.Symbol.Type.ToDisplayString(FullyQualifiedFormat),
-                    Name: x.Symbol.Name)));
+                Namespace: containingSyntax.GetNamespace(),
+                TypeHierarchie: containingSyntax.GetTypeHierarchy(),
+                Properties: props
+                    .Select(x => PropertyToGenerate(x.Node, x.Symbol))
+                    .ToImmutableEquatableArray());
             
             ctxt.AddSource(
                 hintName: fullTypeToGenerate.GetFileName(), 
@@ -48,42 +49,19 @@ public class SourceCodeGenerator : IIncrementalGenerator
         miscellaneousOptions: SymbolDisplayFormat.FullyQualifiedFormat.MiscellaneousOptions |
                               SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
     
-    private static string? GetNamespace(BaseTypeDeclarationSyntax syntax)
+
+    private static PropertyToGenerate PropertyToGenerate(PropertyDeclarationSyntax syntax, IPropertySymbol symbol)
     {
-        var nameSpace = default(string);
-        var potentialNameSpace = syntax.Parent;
+        var accessors = syntax.AccessorList?.Accessors
+            .Select(x => new AccessorToGenerate(x.Modifiers.Select(y => y.Text).ToImmutableEquatableArray(), x.Keyword.Text))
+            .ToDictionary(x => x.Keyword)
+            ?? new();
 
-        while (potentialNameSpace is not null and not BaseNamespaceDeclarationSyntax)
-            potentialNameSpace = potentialNameSpace.Parent;
-
-        while (potentialNameSpace is BaseNamespaceDeclarationSyntax parent)
-        {
-            nameSpace = $"{parent.Name}.{nameSpace}";
-            potentialNameSpace = potentialNameSpace.Parent;
-        }
-
-        nameSpace = nameSpace?.Trim('.');
-
-        return nameSpace is null or "" ? null : nameSpace;
-    }
-
-    private static TypeToGenerate GetTypeHierarchy(TypeDeclarationSyntax syntax)
-    {
-        var typeToGenerate = new TypeToGenerate(
-            Modifiers: syntax.Modifiers.Select(x => x.Text),
-            Keyword: syntax.Keyword.ToString(),
-            Name: syntax.Identifier.Text);
-
-        while (syntax.Parent is TypeDeclarationSyntax parentSyntax)
-        {
-            syntax = parentSyntax;
-            typeToGenerate = new TypeToGenerate(
-                Modifiers: syntax.Modifiers.Select(x => x.Text),
-                Keyword: syntax.Keyword.ToString(),
-                Name: syntax.Identifier.Text,
-                typeToGenerate);
-        }
-
-        return typeToGenerate;
+        return new(
+            Modifiers: syntax.Modifiers.Select(x => x.Text).ToImmutableEquatableArray(),
+            Type: symbol.Type.ToDisplayString(FullyQualifiedFormat),
+            Name: syntax.Identifier.Text,
+            Getter: accessors["get"],
+            Setter: accessors["set"]);
     }
 }

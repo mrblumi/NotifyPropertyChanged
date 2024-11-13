@@ -1,23 +1,8 @@
-using System.Collections;
-
+using MrBlumi.NotifyPropertyChanged.Helpers;
 namespace Test.Generator.NotifyPropertyChanged.Models;
 
 public record TypeToGenerate(
-    IEnumerable<string> Modifiers,
+    ImmutableEquatableArray<string> Modifiers,
     string Keyword,
     string Name,
-    TypeToGenerate? Child = null)
-    : IEnumerable<TypeToGenerate>
-{
-    public IEnumerator<TypeToGenerate> GetEnumerator()
-    {
-        var current = this;
-        while (current is not null)
-        {
-            yield return current;
-            current = current.Child;
-        }
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-}
+    TypeToGenerate? Child = null);

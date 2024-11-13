@@ -1,6 +1,6 @@
 using Test.Generator.NotifyPropertyChanged.Models;
 
-namespace MrBlumi.NotifyPropertyChanged.Helpers;
+namespace MrBlumi.NotifyPropertyChanged.Extensions;
 
 public static class ModelExtensions
 {
@@ -13,7 +13,7 @@ public static class ModelExtensions
         return string.Join(".", hierarchy) + ".g.cs";
     }
 
-    private static IEnumerable<TypeToGenerate> AsEnumerable(this TypeToGenerate? current)
+    public static IEnumerable<TypeToGenerate> AsEnumerable(this TypeToGenerate? current)
     {
         while (current is not null)
         {

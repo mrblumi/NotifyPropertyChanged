@@ -1,3 +1,4 @@
+using MrBlumi.NotifyPropertyChanged.Extensions;
 using Test.Generator.NotifyPropertyChanged.Models;
 
 namespace MrBlumi.NotifyPropertyChanged.Helpers;
@@ -20,13 +21,10 @@ public class SourceCodeWriter(FullTypeToGenerate fullType)
             builder.AppendLine();            
         }
 
-        var type = fullType.TypeHierarchie;
-        while (type is not null)
+        foreach (var type in fullType.TypeHierarchie.AsEnumerable())
         {
             builder.AppendLine($"{string.Join(" ", type.Modifiers)} {type.Keyword} {type.Name}");
             builder.OpenBlock();
-
-            type = type.Child;
         }
         
         builder.AppendLine($"public event PropertyChangedEventHandler? PropertyChanged;");
@@ -44,8 +42,8 @@ public class SourceCodeWriter(FullTypeToGenerate fullType)
         {
             builder.AppendLine($"{string.Join(" ", property.Modifiers)} {property.Type} {property.Name}");
             builder.OpenBlock();
-            builder.AppendLine($"get;");
-            builder.AppendLine($"set => SetProperty(ref field, value);");
+            builder.AppendLine($"{string.Join(" ", [..property.Getter.Modifiers, property.Getter.Keyword])};");
+            builder.AppendLine($"{string.Join(" ", [..property.Setter.Modifiers, property.Setter.Keyword])} => SetProperty(ref field, value);");
             builder.CloseBlock();
             builder.AppendLine();
         }

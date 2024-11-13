@@ -1,6 +1,4 @@
 ﻿using MrBlumi.NotifyPropertyChanged.Tests.Helpers;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace MrBlumi.NotifyPropertyChanged.Tests;
 
