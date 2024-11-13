@@ -44,7 +44,7 @@ public class SourceCodeWriter(FullTypeToGenerate fullType)
         {
             builder.AppendLine($"{string.Join(" ", property.Modifiers)} {property.Type} {property.Name}");
             builder.OpenBlock();
-            builder.AppendLine($"get => field;");
+            builder.AppendLine($"get;");
             builder.AppendLine($"set => SetProperty(ref field, value);");
             builder.CloseBlock();
             builder.AppendLine();

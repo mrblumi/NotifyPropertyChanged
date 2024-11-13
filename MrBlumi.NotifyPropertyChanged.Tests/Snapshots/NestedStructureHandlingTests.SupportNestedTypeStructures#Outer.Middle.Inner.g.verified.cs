@@ -24,7 +24,7 @@ public partial struct Outer
             
             public partial string StringProperty
             {
-                get => field;
+                get;
                 set => SetProperty(ref field, value);
             }
         }
