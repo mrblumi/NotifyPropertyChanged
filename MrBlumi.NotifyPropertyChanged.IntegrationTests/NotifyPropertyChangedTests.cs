@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using MrBlumi.NotifyPropertyChanged.Abstractions;
 using System.ComponentModel;
 
